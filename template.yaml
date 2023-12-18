@@ -1,0 +1,124 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-rust-api
+
+  Sample SAM Template for sam-rust-api
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    MemorySize: 128
+    Architectures: ["arm64"]
+    Handler: bootstrap
+    Runtime: provided.al2
+    Timeout: 5
+    Tracing: Active
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref WeatherTable
+  Api:
+    EndpointConfiguration: REGIONAL
+    TracingEnabled: True
+    Cors:
+      AllowMethods: "'OPTIONS,POST,GET,PUT,DELETE'"
+      AllowHeaders: "'Content-Type'"
+      AllowOrigin: "'*'"
+
+Resources:
+  WeatherApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Description: serverless api for weather application
+  WeatherTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  PostWeatherFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: target/lambda/post-weather-item/
+
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+            RestApiId: !Ref WeatherApi
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref WeatherTable
+  GetWeatherFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: target/lambda/get-weather-item/
+
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /weather/{id}
+            Method: GET
+            RestApiId: !Ref WeatherApi
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref WeatherTable
+  DeleteWeatherFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: target/lambda/delete-weather-item/
+
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /weather/{id}
+            Method: DELETE
+            RestApiId: !Ref WeatherApi
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref WeatherTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref WeatherTable
+  UpdateWeatherFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: target/lambda/update-weather-item/
+
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /weather/{id}
+            Method: PUT
+            RestApiId: !Ref WeatherApi
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref WeatherTable
+
+Outputs:
+  WeatherApi:
+    Description: "API Gateway endpoint URL for dev stage "
+    Value: !Sub "https://${WeatherApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/dev/"
+  PostWeatherFunction:
+    Description: "Post weather Lambda Function ARN"
+    Value: !GetAtt PostWeatherFunction.Arn

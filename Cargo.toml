@@ -1,0 +1,57 @@
+[package]
+name = "sam-rust-api"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+aws-config = "1.1.1"
+aws-sdk-dynamodb = "1.7.0"
+aws-smithy-runtime= { version = "1.1.1", features = ["test-util"] }
+aws-smithy-types = { version = "1.1.1" }
+
+lambda_runtime = { version = "0.8.3"}
+tokio = { version = "1.21.1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.2", features = ["fmt", "json"] }
+svix-ksuid = "^0.6.0"
+aws-smithy-http = "0.60.1"
+serde_json = "1"
+lambda_http = "0.8.3"
+aws_lambda_events = { version = "0.8.3", default-features = false, features = ["apigw"] }
+http = "0.2"
+
+
+[dev-dependencies]
+aws-smithy-http = "0.60.1"
+aws-types = { version = "0.52.0", features = ["hardcoded-credentials"] }
+
+
+
+[[bin]]
+name = "post-weather-item"
+path ="src/bin/lambda/post-weather-item.rs"
+test = false
+
+[[bin]]
+name = "get-weather-item"
+path ="src/bin/lambda/get-weather-item.rs"
+test = false
+
+[[bin]]
+name = "delete-weather-item"
+path ="src/bin/lambda/delete-weather-item.rs"
+test = false
+
+[[bin]]
+name = "update-weather-item"
+path ="src/bin/lambda/update-weather-item.rs"
+test = false
+
+[[bin]]
+name = "list-weather-item"
+path ="src/bin/lambda/list-weather-item.rs"
+test = false
+
