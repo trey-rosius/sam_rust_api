@@ -7,22 +7,16 @@ use lambda_runtime::{service_fn, Error, LambdaEvent};
 use tracing::{info, warn};
 
 use std::env;
-use svix_ksuid::*;
+use sam_rust_api::{utils::{setup_tracing,api_gw_response},model::WeatherItem};
 
-use crate::model::WeatherItem;
-
-pub mod model;
 
 
 /// Main function
 #[::tokio::main]
 async fn main() -> Result<(), Error> {
     
- tracing_subscriber::fmt()
-        .json()
-        .with_max_level(tracing::Level::INFO)
-        .with_target(false)
-        .init();
+     // Initialize logger
+    setup_tracing();
 
     
      let config = aws_config::load_from_env().await;
@@ -48,13 +42,7 @@ async fn update_weather_item(
 let mut headers = HeaderMap::new();
     headers.insert("content-type", "text/html".parse().unwrap());
 
-     let mut resp = ApiGatewayProxyResponse {
-        status_code: Default::default(),
-        is_base64_encoded: Some(false),
-        body: Some(event.payload.path.unwrap().into()),
-        multi_value_headers: Default::default(),
-        headers: Default::default(),
-    };
+     let mut resp = api_gw_response();
 
     // Extract path parameter from request
     let path_parameters = event.payload.path_parameters.get("id");

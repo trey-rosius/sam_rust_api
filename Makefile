@@ -1,5 +1,5 @@
 STACK_NAME ?= sam-rust-api
-FUNCTIONS := post-weather-item get-weather-item delete-weather-item update-weather-item list-weather-item
+FUNCTIONS := post-weather-item get-weather-item delete-weather-item update-weather-item
 
 ARCH := aarch64-unknown-linux-gnu
 ARCH_SPLIT = $(subst -, ,$(ARCH))

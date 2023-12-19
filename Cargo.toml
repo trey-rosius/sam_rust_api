@@ -50,8 +50,4 @@ name = "update-weather-item"
 path ="src/bin/lambda/update-weather-item.rs"
 test = false
 
-[[bin]]
-name = "list-weather-item"
-path ="src/bin/lambda/list-weather-item.rs"
-test = false
 

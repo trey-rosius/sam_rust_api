@@ -37,6 +37,11 @@ impl From<&AttributeValue> for Error {
         Error::InternalError("Invalid value type")
     }
 }
+impl From<AttributeValue> for Error {
+    fn from(_: AttributeValue) -> Error {
+        Error::InternalError("Invalid value type")
+    }
+}
 
 impl<E> From<SdkError<E>> for Error
 where
