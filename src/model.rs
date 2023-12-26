@@ -19,13 +19,6 @@ pub struct WeatherItem{
   
 }
 
-#[derive(Debug, Default, Deserialize, Serialize)]
-pub struct WeatherRange {
-    pub weather_items: Vec<WeatherItem>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub next: Option<String>,
-}
-
 
 fn as_string(val: Option<&AttributeValue>, default: &String) -> String {
     if let Some(v) = val {
@@ -56,7 +49,7 @@ fn as_f64(val: Option<&AttributeValue>, default: f64) -> f64{
 impl TryFrom<&HashMap<String, AttributeValue>> for WeatherItem {
     type Error = Error;
 
-    /// Try to convert a DynamoDB item into a Product
+    /// Try to convert a DynamoDB item into a Weather Item
     ///
     /// This could fail as the DynamoDB item might be missing some fields.
     fn try_from(value: &HashMap<String, AttributeValue>) -> Result<Self, Self::Error> {

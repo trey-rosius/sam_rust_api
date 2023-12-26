@@ -9,7 +9,6 @@ Description: >
 Globals:
   Function:
     MemorySize: 128
-    Architectures: ["arm64"]
     Handler: bootstrap
     Runtime: provided.al2
     Timeout: 5
@@ -94,8 +93,6 @@ Resources:
             RestApiId: !Ref WeatherApi
       Policies:
         - DynamoDBWritePolicy:
-            TableName: !Ref WeatherTable
-        - DynamoDBReadPolicy:
             TableName: !Ref WeatherTable
   UpdateWeatherFunction:
     Type: AWS::Serverless::Function

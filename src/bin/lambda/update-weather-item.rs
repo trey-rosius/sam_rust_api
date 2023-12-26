@@ -77,7 +77,7 @@ let mut headers = HeaderMap::new();
 
      info!("Parsed item: {:?}", weather_item);
  
-    // Put the item in the DynamoDB table
+    // update item in the DynamoDB table
     let res =  client
         .update_item()
         .table_name(table_name)

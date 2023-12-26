@@ -1,5 +1,6 @@
 use aws_lambda_events::apigw::ApiGatewayProxyResponse;
-use tracing::{info, instrument};
+
+
 pub fn setup_tracing(){
         tracing_subscriber::fmt()
         .json()
@@ -16,5 +17,5 @@ pub fn api_gw_response()->ApiGatewayProxyResponse{
         multi_value_headers: Default::default(),
         headers: Default::default(),
     };
-    resp
+   resp
 }
